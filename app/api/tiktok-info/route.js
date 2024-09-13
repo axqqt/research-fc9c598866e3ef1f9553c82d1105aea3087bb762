@@ -36,8 +36,28 @@ export async function POST(request) {
     }
 
     const apiUrl = `https://api2.musical.ly/aweme/v1/aweme/detail/?aweme_id=${videoId}`;
-    const response = await fetch(apiUrl);
-    const data = await response.json();
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000); // 10 seconds timeout
+
+    const response = await fetch(apiUrl, { signal: controller.signal });
+    clearTimeout(timeout);
+
+    if (!response.ok) {
+      console.error(`Failed to fetch from TikTok API: ${response.statusText}`);
+      return setCorsHeaders(NextResponse.json({ error: 'Failed to fetch from TikTok API' }, { status: response.status }));
+    }
+
+    const text = await response.text();
+    console.log('Raw response from TikTok API:', text);
+
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (error) {
+      console.error('Failed to parse JSON:', error);
+      return setCorsHeaders(NextResponse.json({ error: 'Invalid JSON format' }, { status: 500 }));
+    }
 
     if (!data || !data.aweme_detail) {
       return setCorsHeaders(NextResponse.json({ error: 'Failed to fetch video metadata' }, { status: 500 }));
