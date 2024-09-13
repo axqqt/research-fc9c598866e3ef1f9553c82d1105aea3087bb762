@@ -17,7 +17,7 @@ export default function Home() {
   const handleSearch = async (searchTerms) => {
     setLoading(true);
     try {
-      const response = await fetch(`${baseURL}/api/search`, {
+      const response = await fetch(`/api/search`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ searchTerm: searchTerms }),
