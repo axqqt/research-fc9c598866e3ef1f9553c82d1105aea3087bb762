@@ -11,7 +11,9 @@
   "dependencies": {
     "@bochilteam/scraper-tiktok": "^5.0.0",
     "@google/generative-ai": "^0.16.0",
+    "@prevter/tiktok-scraper": "^1.0.1",
     "@upstash/redis": "^1.34.0",
+    "@xct007/tiktok-scraper": "^1.0.2",
     "async-retry": "^1.3.3",
     "axios": "^1.7.3",
     "cheerio": "^1.0.0",
@@ -28,7 +30,8 @@
     "puppeteer": "^23.0.2",
     "react": "^18",
     "react-dom": "^18",
-    "react-player": "^2.16.0"
+    "react-player": "^2.16.0",
+    "tiktok-scraper": "^1.4.36"
   },
   "devDependencies": {
     "eslint": "^8",

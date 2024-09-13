@@ -1,6 +1,4 @@
-"use client";
-
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 export default function Home() {
   const [url, setUrl] = useState('');
@@ -19,7 +17,7 @@ export default function Home() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ url }),
+        body: JSON.stringify({ videoUrl: url }),
       });
 
       if (!response.ok) {
@@ -27,7 +25,7 @@ export default function Home() {
       }
 
       const data = await response.json();
-      setTiktokInfo(data);
+      setTiktokInfo(data.collector[0]);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -37,20 +35,16 @@ export default function Home() {
 
   return (
     <div className="container mx-auto p-4">
-              <br/>
       <h1 className="text-2xl font-bold mb-4">TikTok Info Fetcher</h1>
-      <br/> <br/>
       <form onSubmit={handleSubmit} className="mb-4">
         <input
           type="text"
           value={url}
           onChange={(e) => setUrl(e.target.value)}
-          style={{color:"black"}}
           placeholder="Enter TikTok URL"
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border rounded text-black"
           required
         />
-        <br/> <br/>
         <button
           type="submit"
           className="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
@@ -63,23 +57,27 @@ export default function Home() {
       {error && <p className="text-red-500">{error}</p>}
 
       {tiktokInfo && (
-        <div className="bg-gray-100 p-4 rounded">
-          <h2 className="text-xl font-semibold">{tiktokInfo.nickname}</h2>
-          <p>Username: {tiktokInfo.username}</p>
-          <p>Description: {tiktokInfo.description}</p>
-          <p>Played: {tiktokInfo.played}</p>
-          <p>Commented: {tiktokInfo.commented}</p>
-          <p>Saved: {tiktokInfo.saved}</p>
-          <p>Shared: {tiktokInfo.shared}</p>
-          <p>Song: {tiktokInfo.song}</p>
-          <div className="mt-4">
-            <h3 className="font-semibold">Video:</h3>
-            <video src={tiktokInfo.video.noWatermark} controls className="mt-2 max-w-full" />
-          </div>
-          <div className="mt-4">
-            <h3 className="font-semibold">Audio:</h3>
-            <audio src={tiktokInfo.audio} controls className="mt-2" />
-          </div>
+        <div className="bg-gray-800 p-4 rounded">
+          <h2 className="text-xl font-semibold">{tiktokInfo.authorMeta.nickName}</h2>
+          <p>Username: {tiktokInfo.authorMeta.name}</p>
+          <p>Description: {tiktokInfo.text}</p>
+          <p>Likes: {tiktokInfo.diggCount}</p>
+          <p>Comments: {tiktokInfo.commentCount}</p>
+          <p>Shares: {tiktokInfo.shareCount}</p>
+          <p>Plays: {tiktokInfo.playCount}</p>
+          <p>Music: {tiktokInfo.musicMeta.musicName} by {tiktokInfo.musicMeta.musicAuthor}</p>
+          {tiktokInfo.videoUrl && (
+            <div className="mt-4">
+              <h3 className="font-semibold">Video:</h3>
+              <video src={tiktokInfo.videoUrl} controls className="mt-2 max-w-full" />
+            </div>
+          )}
+          {tiktokInfo.musicMeta.musicUrl && (
+            <div className="mt-4">
+              <h3 className="font-semibold">Audio:</h3>
+              <audio src={tiktokInfo.musicMeta.musicUrl} controls className="mt-2" />
+            </div>
+          )}
         </div>
       )}
     </div>
