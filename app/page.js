@@ -43,9 +43,16 @@ export default function Home() {
     saveAs(blob, "selected_products.csv");
   };
 
+  const handleRemoveProduct = (productToRemove) => {
+    setSelectedProducts(prevSelected => 
+      prevSelected.filter(product => product.url !== productToRemove.url)
+    );
+  };
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">AliExpress Product Finder</h1>
+      <br />
       {/* <Link href={"/download"} style={{ margin: "40px" }}>
         Tiktok Scraping
       </Link> */}
@@ -53,7 +60,7 @@ export default function Home() {
         Open Calendar
       </Link>
       <Link href={"/voice"}>Ai voice generation</Link> */}
-      <br /> <br />
+      <br />
       <SearchForm onSearch={handleSearch} />
       {loading ? (
         <p>Searching for winning products...</p>
@@ -64,6 +71,7 @@ export default function Home() {
           onAddProduct={handleAddProduct}
           onExport={handleExport}
           onClearSelected={() => setSelectedProducts([])}
+          onRemoveProduct={handleRemoveProduct}
         />
       )}
       <h1>{status}</h1>
