@@ -1,3 +1,4 @@
+"use client"
 import React, { useState } from 'react';
 
 export default function Home() {
@@ -17,7 +18,7 @@ export default function Home() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ videoUrl: url }),
+        body: JSON.stringify({ url }),
       });
 
       if (!response.ok) {
@@ -25,7 +26,7 @@ export default function Home() {
       }
 
       const data = await response.json();
-      setTiktokInfo(data.collector[0]);
+      setTiktokInfo(data);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -58,24 +59,23 @@ export default function Home() {
 
       {tiktokInfo && (
         <div className="bg-gray-800 p-4 rounded">
-          <h2 className="text-xl font-semibold">{tiktokInfo.authorMeta.nickName}</h2>
-          <p>Username: {tiktokInfo.authorMeta.name}</p>
-          <p>Description: {tiktokInfo.text}</p>
-          <p>Likes: {tiktokInfo.diggCount}</p>
-          <p>Comments: {tiktokInfo.commentCount}</p>
-          <p>Shares: {tiktokInfo.shareCount}</p>
-          <p>Plays: {tiktokInfo.playCount}</p>
-          <p>Music: {tiktokInfo.musicMeta.musicName} by {tiktokInfo.musicMeta.musicAuthor}</p>
-          {tiktokInfo.videoUrl && (
+          <h2 className="text-xl font-semibold">{tiktokInfo.author.nickname}</h2>
+          <p>Description: {tiktokInfo.description}</p>
+          <p>Likes: {tiktokInfo.statistics.diggCount}</p>
+          <p>Comments: {tiktokInfo.statistics.commentCount}</p>
+          <p>Shares: {tiktokInfo.statistics.shareCount}</p>
+          <p>Plays: {tiktokInfo.statistics.playCount}</p>
+          <p>Music: {tiktokInfo.music.title} by {tiktokInfo.music.author}</p>
+          {tiktokInfo.video.playAddr && (
             <div className="mt-4">
               <h3 className="font-semibold">Video:</h3>
-              <video src={tiktokInfo.videoUrl} controls className="mt-2 max-w-full" />
+              <video src={tiktokInfo.video.playAddr} controls className="mt-2 max-w-full" />
             </div>
           )}
-          {tiktokInfo.musicMeta.musicUrl && (
+          {tiktokInfo.music.playUrl && (
             <div className="mt-4">
               <h3 className="font-semibold">Audio:</h3>
-              <audio src={tiktokInfo.musicMeta.musicUrl} controls className="mt-2" />
+              <audio src={tiktokInfo.music.playUrl} controls className="mt-2" />
             </div>
           )}
         </div>
