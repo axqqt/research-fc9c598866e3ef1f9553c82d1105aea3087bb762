@@ -12,10 +12,12 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState("");
 
+  const baseURL = "https://products-three-xi.vercel.app/"
+
   const handleSearch = async (searchTerms) => {
     setLoading(true);
     try {
-      const response = await fetch("/api/search", {
+      const response = await fetch(`${baseURL}/api/search`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ searchTerm: searchTerms }),
