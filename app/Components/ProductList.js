@@ -38,7 +38,7 @@ export default function ProductList({
                       onClick={() => onRemoveProduct(product)}
                       className="ml-2 text-red-500 hover:text-red-700"
                     >
-                      <X size={16} />
+                      Delete
                     </button>
                   </li>
                 ))}

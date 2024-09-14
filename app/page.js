@@ -26,6 +26,9 @@ export default function Home() {
       
       if (response.status === 400) {
         setStatus("Ack! We were unable to find results for your prompt :(");
+        setInterval(()=>{
+          setStatus("")
+        },5000)
       }
       const data = await response.json();
       setProducts(data);
