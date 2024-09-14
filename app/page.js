@@ -22,21 +22,29 @@ export default function Home() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ searchTerm: searchTerms }),
       });
-      console.log(response.data ? response.data : `No data found`);
-      
-      if (response.status === 400) {
-        setStatus("Ack! We were unable to find results for your prompt :(");
-        setInterval(()=>{
-          setStatus("")
-        },5000)
+  
+      // Check for HTTP errors
+      if (!response.ok) {
+        if (response.status === 400) {
+          setStatus("Ack! We were unable to find results for your prompt :(");
+          setTimeout(() => {
+            setStatus("");
+          }, 5000);
+        }
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
+  
       const data = await response.json();
+  
+      console.log(data ? data : `No data found`);
       setProducts(data);
     } catch (error) {
       console.error("Search failed:", error);
-    }
-    setLoading(false);
+    } finally {
+      setLoading(false);
+    }
   };
+  
 
   const handleAddProduct = (product) => {
     setSelectedProducts([...selectedProducts, product]);
