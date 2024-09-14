@@ -45,6 +45,8 @@ export async function POST(request) {
     }
 
     const response = NextResponse.json(scrapedProducts, { status: 200 });
+    console.log("Backend is running");
+    
     return setCorsHeaders(response);
   } catch (error) {
     console.error('Search failed:', error);
