@@ -18,7 +18,7 @@ export default function Home() {
   const handleSearch = async (searchTerms) => {
     setLoading(true);
     try {
-      const response = await fetch(`${expressBackend}/api/search`, {
+      const response = await fetch(`${expressBackend}/api/searchx`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ searchTerm: searchTerms }),
