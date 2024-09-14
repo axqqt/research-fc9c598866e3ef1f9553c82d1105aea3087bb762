@@ -10,10 +10,19 @@ export async function GET(req) {
 
   try {
     const response = await fetch(
-      `https://api.api-ninjas.com/v1/holidays?country=${country}&year=${year}&type=observance`
+      `https://api.api-ninjas.com/v1/holidays?country=${country}&year=${year}&type=observance`,
+      {
+        headers: {
+          'X-Api-Key': process.env.holidayKey,  // API key from env variables
+        },
+      }
     );
+
+    if (!response.ok) {
+      throw new Error(`API error! Status: ${response.status}`);
+    }
+
     const data = await response.json();
-    
     return NextResponse.json(data);
   } catch (error) {
     console.error("Error fetching holidays:", error);

@@ -14,12 +14,8 @@ const Page = () => {
   const fetchHolidays = async () => {
     setLoading(true);
     try {
-      const apiUrl = `https://api.api-ninjas.com/v1/holidays?country=${country}&year=${year}`;
-      const response = await fetch(apiUrl, {
-        headers: {
-          'X-Api-Key': process.env.holidayKey // Replace with your actual API key
-        }
-      });
+      const apiUrl = `/api/holidays?country=${country}&year=${year}`;
+      const response = await fetch(apiUrl); // Fetch from your API route
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -83,7 +79,6 @@ const Page = () => {
           Find Holidays
         </button>
       </form>
-
       {loading ? (
         <p className="text-black">Loading holidays...</p>
       ) : (
