@@ -13,11 +13,12 @@ export default function Home() {
   const [status, setStatus] = useState("");
 
   const baseURL = "https://products-three-xi.vercel.app/"
+  const expressBackend = "https://aliback-r2qw.onrender.com";
 
   const handleSearch = async (searchTerms) => {
     setLoading(true);
     try {
-      const response = await fetch(`api/search`, {
+      const response = await fetch(`${expressBackend}/api/search`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ searchTerm: searchTerms }),
@@ -31,8 +32,8 @@ export default function Home() {
             setStatus("");
           }, 5000);
         }
-        if (response.status === 500) {
-          setStatus(`The 500 error is ${JSON.stringify(response.text)}`);
+        else if (response.status === 500) {
+          setStatus(`The 500 error is ${response.text}`);
         }
         throw new Error(`HTTP error! status: ${response.status}`);
       }
