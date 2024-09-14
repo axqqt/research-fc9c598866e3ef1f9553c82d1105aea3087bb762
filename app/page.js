@@ -31,6 +31,9 @@ export default function Home() {
             setStatus("");
           }, 5000);
         }
+        if (response.status === 500) {
+          setStatus(`The 500 error is ${JSON.stringify(response.text)}`);
+        }
         throw new Error(`HTTP error! status: ${response.status}`);
       }
   
