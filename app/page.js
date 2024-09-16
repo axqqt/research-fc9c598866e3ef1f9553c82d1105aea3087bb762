@@ -73,19 +73,28 @@ export default function Home() {
     <div className="container mx-auto p-4">
            <br />
       <h1 className="text-2xl font-bold mb-4">AliExpress Product Finder</h1>
-      <Link href={"/download"} style={{ margin: "40px" }}>
-        Tiktok Scraping
-      </Link>
-
-      {/* <Link href={"/tttt"} style={{ margin: "40px" }}>
-        Tiktok Scraper
-      </Link> */}
-      <br />
-      <Link href={"/calendar"} style={{ margin: "40px" }}>
-        Open Calendar
-      </Link>
-      <Link href={"/voice"}>Ai voice generation</Link>
-      <br />
+      <div className="navigation-links my-8 p-6 bg-black-100 rounded-lg shadow-md">
+      <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6">
+        <Link 
+          href="/download" 
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300"
+        >
+          Tiktok Scraping
+        </Link>
+        <Link 
+          href="/calendar" 
+          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition duration-300"
+        >
+          Open Calendar
+        </Link>
+        <Link 
+          href="/voice" 
+          className="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 transition duration-300"
+        >
+          AI Voice Generation
+        </Link>
+      </div>
+      </div>
       <SearchForm onSearch={handleSearch} />
       <br />
       {loading ? (
