@@ -1,16 +1,17 @@
 "use client"
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const Page = () => {
+  const currentYear = new Date().getFullYear().toString();
   const [country, setCountry] = useState("US");
-  const [year, setYear] = useState("2024");
+  const [year, setYear] = useState(currentYear);
   const [holidayType, setHolidayType] = useState("all");
   const [holidays, setHolidays] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const countries = ["US", "CA", "GB", "AU", "IN"];
-  const years = ["2020", "2021", "2022", "2023", "2024", "2025"];
+  const years = Array.from({length: 6}, (_, i) => (parseInt(currentYear) + i - 1).toString());
   const holidayTypes = [
     "all",
     "public_holiday",
@@ -33,6 +34,10 @@ const Page = () => {
     "local_observance"
   ];
 
+  useEffect(() => {
+    fetchHolidays();
+  }, []);
+
   const fetchHolidays = async () => {
     setLoading(true);
     try {
@@ -44,7 +49,10 @@ const Page = () => {
       }
 
       const data = await response.json();
-      const sortedHolidays = data.sort((a, b) => new Date(b.date) - new Date(a.date));
+      const currentDate = new Date();
+      const sortedHolidays = data
+        .filter(holiday => new Date(holiday.date) >= currentDate)
+        .sort((a, b) => new Date(a.date) - new Date(b.date));
       setHolidays(sortedHolidays);
     } catch (error) {
       console.error("Error fetching holidays:", error);
@@ -119,7 +127,7 @@ const Page = () => {
               <p><span className="font-medium">Country:</span> {holiday.country} ({holiday.iso})</p>
               <p><span className="font-medium">Year:</span> {holiday.year}</p>
               <p><span className="font-medium">Type:</span> {holiday.type}</p>
-              {index === 0 && <p className="mt-2 text-blue-500 font-bold">Latest Event</p>}
+              {index === 0 && <p className="mt-2 text-blue-500 font-bold">Next Upcoming Holiday</p>}
             </div>
           ))}
         </div>
