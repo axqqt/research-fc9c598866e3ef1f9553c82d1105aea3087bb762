@@ -85,7 +85,7 @@ export default function Home() {
           href="/tttt" 
           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300"
         >
-          Scraper 2.0
+          Scraper 2.0 ("Doesn't work")
         </Link>
         <Link 
           href="/calendar" 
