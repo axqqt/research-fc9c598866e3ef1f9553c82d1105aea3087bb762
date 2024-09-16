@@ -40,16 +40,26 @@ export async function POST(request) {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 10000); // 10 seconds timeout
 
-    const response = await fetch(apiUrl, { signal: controller.signal });
-    clearTimeout(timeout);
+    let response;
+    try {
+      response = await fetch(apiUrl, { signal: controller.signal });
+      clearTimeout(timeout);
 
-    if (!response.ok) {
-      console.error(`Failed to fetch from TikTok API: ${response.statusText}`);
-      return setCorsHeaders(NextResponse.json({ error: 'Failed to fetch from TikTok API' }, { status: response.status }));
+      if (!response.ok) {
+        console.error(`Failed to fetch from TikTok API: ${response.statusText}`);
+        return setCorsHeaders(NextResponse.json({ error: 'Failed to fetch from TikTok API' }, { status: response.status }));
+      }
+    } catch (error) {
+      clearTimeout(timeout);
+      console.error('Fetch error or timeout:', error);
+      return setCorsHeaders(NextResponse.json({ error: 'Failed to fetch from TikTok API or request timed out' }, { status: 500 }));
     }
 
     const text = await response.text();
-    console.log('Raw response from TikTok API:', text);
+    if (!text) {
+      console.error('Empty response from TikTok API');
+      return setCorsHeaders(NextResponse.json({ error: 'Empty response from TikTok API' }, { status: 500 }));
+    }
 
     let data;
     try {

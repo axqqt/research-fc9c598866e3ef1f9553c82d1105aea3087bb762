@@ -79,7 +79,13 @@ export default function Home() {
           href="/download" 
           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300"
         >
-          Tiktok Scraping
+          Tiktok Scraping (Bugged Out)
+        </Link>
+        <Link 
+          href="/tttt" 
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300"
+        >
+          Scraper 2.0
         </Link>
         <Link 
           href="/calendar" 
@@ -91,7 +97,7 @@ export default function Home() {
           href="/voice" 
           className="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 transition duration-300"
         >
-          AI Voice Generation
+          AI Voice Generation (Not Implemented Yet)
         </Link>
       </div>
       </div>
