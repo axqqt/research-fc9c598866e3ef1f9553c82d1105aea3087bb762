@@ -3,11 +3,13 @@
 import { scrapeAliExpress } from '@/lib/scraper';
 import { NextResponse } from 'next/server';
 
-const allowedOrigin = 'https://products-three-xi.vercel.app';
+const allowedOrigins = ['https://products-three-xi.vercel.app', 'http://localhost:3000'];
 
-function setCorsHeaders(response) {
+function setCorsHeaders(response, origin) {
+  if (allowedOrigins.includes(origin)) {
+    response.headers.set('Access-Control-Allow-Origin', origin);
+  }
   response.headers.set('Access-Control-Allow-Credentials', 'true');
-  response.headers.set('Access-Control-Allow-Origin', allowedOrigin);
   response.headers.set('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
   response.headers.set(
     'Access-Control-Allow-Headers',
@@ -17,44 +19,39 @@ function setCorsHeaders(response) {
 }
 
 export async function POST(request) {
+  const origin = request.headers.get('origin');
+
   // Handle CORS preflight request
   if (request.method === 'OPTIONS') {
-    return setCorsHeaders(new NextResponse(null, { status: 204 }));
+    return setCorsHeaders(new NextResponse(null, { status: 204 }), origin);
   }
 
   try {
-    const body = await request.text();
-    let searchTerm;
-    try {
-      const jsonBody = JSON.parse(body);
-      searchTerm = jsonBody.searchTerm;
-    } catch (parseError) {
-      console.error('Failed to parse request body:', body);
-      return setCorsHeaders(NextResponse.json({ error: 'Invalid JSON in request body' }, { status: 400 }));
-    }
+    const body = await request.json();
+    const searchTerm = body.searchTerm;
 
     if (!searchTerm) {
-      return setCorsHeaders(NextResponse.json({ error: 'Search term is required' }, { status: 400 }));
+      return setCorsHeaders(NextResponse.json({ error: 'Search term is required' }, { status: 400 }), origin);
     }
 
     const scrapedProducts = await scrapeAliExpress(searchTerm);
 
     if (!Array.isArray(scrapedProducts)) {
       console.error('Unexpected scraper output:', scrapedProducts);
-      return setCorsHeaders(NextResponse.json({ error: 'Unexpected scraper output' }, { status: 500 }));
+      return setCorsHeaders(NextResponse.json({ error: 'Unexpected scraper output' }, { status: 500 }), origin);
     }
 
     const response = NextResponse.json(scrapedProducts, { status: 200 });
     console.log("Backend is running");
     
-    return setCorsHeaders(response);
+    return setCorsHeaders(response, origin);
   } catch (error) {
     console.error('Search failed:', error);
-    return setCorsHeaders(NextResponse.json({ error: 'Failed to search products', details: error.message }, { status: 500 }));
+    return setCorsHeaders(NextResponse.json({ error: 'Failed to search products', details: error.message }, { status: 500 }), origin);
   }
 }
 
-// Handle preflight requests (OPTIONS)
-export async function OPTIONS() {
-  return setCorsHeaders(new NextResponse(null, { status: 204 }));
+export async function OPTIONS(request) {
+  const origin = request.headers.get('origin');
+  return setCorsHeaders(new NextResponse(null, { status: 204 }), origin);
 }
