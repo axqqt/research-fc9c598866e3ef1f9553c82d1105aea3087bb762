@@ -5,16 +5,38 @@ import React, { useState } from "react";
 const Page = () => {
   const [country, setCountry] = useState("US");
   const [year, setYear] = useState("2024");
+  const [holidayType, setHolidayType] = useState("all");
   const [holidays, setHolidays] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const countries = ["US", "CA", "GB", "AU", "IN"]; // Example countries
+  const countries = ["US", "CA", "GB", "AU", "IN"];
   const years = ["2020", "2021", "2022", "2023", "2024", "2025"];
+  const holidayTypes = [
+    "all",
+    "public_holiday",
+    "national_holiday",
+    "federal_holiday",
+    "observance",
+    "state_holiday",
+    "optional_holiday",
+    "clock_change_daylight_saving_time",
+    "local_holiday",
+    "united_nations_observance",
+    "bank_holiday",
+    "common_local_holiday",
+    "christian",
+    "jewish_holiday",
+    "muslim",
+    "hindu_holiday",
+    "restricted_holiday",
+    "official_holiday",
+    "local_observance"
+  ];
 
   const fetchHolidays = async () => {
     setLoading(true);
     try {
-      const apiUrl = `/api/holidays?country=${country}&year=${year}`;
+      const apiUrl = `/api/holidays?country=${country}&year=${year}&holidaytype=${holidayType}`;
       const response = await fetch(apiUrl);
 
       if (!response.ok) {
@@ -22,7 +44,8 @@ const Page = () => {
       }
 
       const data = await response.json();
-      setHolidays(data); // Store the full array of holiday objects
+      const sortedHolidays = data.sort((a, b) => new Date(b.date) - new Date(a.date));
+      setHolidays(sortedHolidays);
     } catch (error) {
       console.error("Error fetching holidays:", error);
       setHolidays([]);
@@ -49,9 +72,7 @@ const Page = () => {
             className="p-2 border rounded text-black"
           >
             {countries.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
+              <option key={c} value={c}>{c}</option>
             ))}
           </select>
 
@@ -61,9 +82,17 @@ const Page = () => {
             className="p-2 border rounded text-black"
           >
             {years.map((y) => (
-              <option key={y} value={y}>
-                {y}
-              </option>
+              <option key={y} value={y}>{y}</option>
+            ))}
+          </select>
+
+          <select
+            value={holidayType}
+            onChange={(e) => setHolidayType(e.target.value)}
+            className="p-2 border rounded text-black"
+          >
+            {holidayTypes.map((type) => (
+              <option key={type} value={type}>{type.replace(/_/g, ' ')}</option>
             ))}
           </select>
         </div>
@@ -76,17 +105,21 @@ const Page = () => {
         </button>
       </form>
       {loading ? (
-        <p className="text-white">Loading holidays...</p>
+        <p className="text-black">Loading holidays...</p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="space-y-4">
           {holidays.map((holiday, index) => (
-            <div key={index} className="bg-white shadow-md rounded-lg p-6 text-black">
+            <div 
+              key={index} 
+              className={`bg-white shadow-md rounded-lg p-6 text-black ${index === 0 ? 'border-2 border-blue-500' : ''}`}
+            >
               <h2 className="text-xl font-semibold mb-2">{holiday.name}</h2>
               <p><span className="font-medium">Date:</span> {holiday.date}</p>
               <p><span className="font-medium">Day:</span> {holiday.day}</p>
               <p><span className="font-medium">Country:</span> {holiday.country} ({holiday.iso})</p>
               <p><span className="font-medium">Year:</span> {holiday.year}</p>
               <p><span className="font-medium">Type:</span> {holiday.type}</p>
+              {index === 0 && <p className="mt-2 text-blue-500 font-bold">Latest Event</p>}
             </div>
           ))}
         </div>

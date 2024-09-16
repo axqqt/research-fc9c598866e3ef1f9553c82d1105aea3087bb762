@@ -1,5 +1,4 @@
 "use server";
-
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
@@ -7,10 +6,18 @@ export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const country = searchParams.get('country') || 'US';
   const year = searchParams.get('year') || '2024';
+  const holidayType = searchParams.get('holidaytype') || 'all';
 
   try {
+    let apiUrl = `https://api.api-ninjas.com/v1/holidays?country=${country}&year=${year}`;
+    
+    // Add the holiday type to the API URL if it's not 'all'
+    if (holidayType !== 'all') {
+      apiUrl += `&type=${holidayType}`;
+    }
+
     const response = await fetch(
-      `https://api.api-ninjas.com/v1/holidays?country=${country}&year=${year}&type=observance`,
+      apiUrl,
       {
         headers: {
           'X-Api-Key': process.env.holidayKey,  // API key from env variables
