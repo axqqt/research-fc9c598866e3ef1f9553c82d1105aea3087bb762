@@ -39,10 +39,10 @@ export async function POST(request) {
 
     const scrapedProducts = await scrapeAliExpress(searchTerm);
 
-    // if (!Array.isArray(scrapedProducts)) {
-    //   console.error('Unexpected scraper output:', scrapedProducts);
-    //   return setCorsHeaders(NextResponse.json({ error: 'Unexpected scraper output' }, { status: 500 }));
-    // }
+    if (!Array.isArray(scrapedProducts)) {
+      console.error('Unexpected scraper output:', scrapedProducts);
+      return setCorsHeaders(NextResponse.json({ error: 'Unexpected scraper output' }, { status: 500 }));
+    }
 
     const response = NextResponse.json(scrapedProducts, { status: 200 });
     console.log("Backend is running");
