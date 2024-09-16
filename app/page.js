@@ -34,6 +34,9 @@ export default function Home() {
         }
         else if (response.status === 500) {
           setStatus(`The 500 error is ${response.text}`);
+          setInterval(()=>{
+            setStatus("")
+          },5000)
         }
         throw new Error(`HTTP error! status: ${response.status}`);
       }
