@@ -23,6 +23,7 @@ export async function GET(req) {
     }
 
     const data = await response.json();
+    
     return NextResponse.json(data);
   } catch (error) {
     console.error("Error fetching holidays:", error);

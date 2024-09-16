@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import Link from "next/link";
 import React, { useState } from "react";
 
@@ -15,18 +15,14 @@ const Page = () => {
     setLoading(true);
     try {
       const apiUrl = `/api/holidays?country=${country}&year=${year}`;
-      const response = await fetch(apiUrl); // Fetch from your API route
+      const response = await fetch(apiUrl);
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
       const data = await response.json();
-      const holidaysMapped = data.reduce((acc, holiday) => {
-        acc[holiday.name] = holiday.date;
-        return acc;
-      }, {});
-      setHolidays(holidaysMapped);
+      setHolidays(data); // Store the full array of holiday objects
     } catch (error) {
       console.error("Error fetching holidays:", error);
       setHolidays([]);
@@ -50,7 +46,7 @@ const Page = () => {
           <select
             value={country}
             onChange={(e) => setCountry(e.target.value)}
-            className="p-2 border rounded text-black" // Ensuring black text color
+            className="p-2 border rounded text-black"
           >
             {countries.map((c) => (
               <option key={c} value={c}>
@@ -62,7 +58,7 @@ const Page = () => {
           <select
             value={year}
             onChange={(e) => setYear(e.target.value)}
-            className="p-2 border rounded text-black" // Ensuring black text color
+            className="p-2 border rounded text-black"
           >
             {years.map((y) => (
               <option key={y} value={y}>
@@ -80,15 +76,20 @@ const Page = () => {
         </button>
       </form>
       {loading ? (
-        <p className="text-black">Loading holidays...</p>
+        <p className="text-white">Loading holidays...</p>
       ) : (
-        <ul className="text-black">
-          {Object.entries(holidays).map(([name, date], index) => (
-            <li key={index} className="mb-2">
-              <strong>{name}</strong> - {date}
-            </li>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {holidays.map((holiday, index) => (
+            <div key={index} className="bg-white shadow-md rounded-lg p-6 text-black">
+              <h2 className="text-xl font-semibold mb-2">{holiday.name}</h2>
+              <p><span className="font-medium">Date:</span> {holiday.date}</p>
+              <p><span className="font-medium">Day:</span> {holiday.day}</p>
+              <p><span className="font-medium">Country:</span> {holiday.country} ({holiday.iso})</p>
+              <p><span className="font-medium">Year:</span> {holiday.year}</p>
+              <p><span className="font-medium">Type:</span> {holiday.type}</p>
+            </div>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );
