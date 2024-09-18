@@ -72,7 +72,7 @@ export default function Home() {
   return (
     <div className="container mx-auto p-4">
            <br />
-      <h1 className="text-2xl font-bold mb-4">Scraper</h1>
+      <h1 className="text-2xl font-bold mb-4">Ecom</h1>
       <div className="navigation-links my-8 p-6 bg-black-100 rounded-lg shadow-md">
       <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6">
         <Link 
