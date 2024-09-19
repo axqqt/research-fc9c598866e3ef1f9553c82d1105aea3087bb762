@@ -6,6 +6,9 @@ import { NextResponse } from "next/server";
 export async function GET() {
   const options = {
     method: "GET",
+    headers: {
+      'xi-api-key': process.env.ELEVEN_LABS_API_KEY
+    }
   };
 
   try {
