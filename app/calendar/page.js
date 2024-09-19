@@ -95,7 +95,7 @@ const Page = () => {
           </select>
 
           <select
-            value={holidayType}
+            value={"observance"}
             onChange={(e) => setHolidayType(e.target.value)}
             className="p-2 border rounded text-black"
           >
