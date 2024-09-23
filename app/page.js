@@ -79,32 +79,32 @@ export default function Home() {
           href="/download" 
           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300"
         >
-          Tiktok Scraping (Bugged Out)
+          Tiktok Scrape
         </Link>
-        <Link 
+        {/* <Link 
           href="/tttt" 
           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300"
         >
           Scraper 2.0 ("Doesn't work")
-        </Link>
-        <Link 
+        </Link> */}
+        {/* <Link 
           href="/ttfix" 
           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300"
         >
           Tiktok Fixed
-        </Link>
+        </Link> */}
         <Link 
           href="/calendar" 
           className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition duration-300"
         >
           Open Calendar
         </Link>
-        <Link 
+        {/* <Link 
           href="/voice" 
           className="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 transition duration-300"
         >
           AI Voice Generation (Not Implemented Yet)
-        </Link>
+        </Link> */}
       </div>
       </div>
       <SearchForm onSearch={handleSearch} />
