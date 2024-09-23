@@ -1,5 +1,3 @@
-import https from 'https';
-
 const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY;
 
 if (!RAPIDAPI_KEY) {
@@ -19,50 +17,38 @@ export async function POST(request) {
     }
 
     const encodedPrompt = encodeURIComponent(prompt);
+    const apiUrl = `https://tiktok-video-no-watermark2.p.rapidapi.com/feed/search?keywords=${encodedPrompt}&count=${novids}&cursor=0&region=US&publish_time=0&sort_type`;
 
-    const options = {
+    const scraperRequest = new Request(apiUrl, {
       method: 'GET',
-      hostname: 'download-videos-tiktok.p.rapidapi.com',
-      path: `/searchvideo?keywords=${encodedPrompt}&count=${novids}&offset=0`,
       headers: {
+        'x-rapidapi-host': 'tiktok-video-no-watermark2.p.rapidapi.com',
         'x-rapidapi-key': RAPIDAPI_KEY,
-        'x-rapidapi-host': 'download-videos-tiktok.p.rapidapi.com'
-      }
-    };
-
-    return new Promise((resolve, reject) => {
-      const req = https.request(options, function (res) {
-        const chunks = [];
-
-        res.on('data', function (chunk) {
-          chunks.push(chunk);
-        });
-
-        res.on('end', function () {
-          const body = Buffer.concat(chunks);
-          const data = JSON.parse(body.toString());
-
-          if (res.statusCode !== 200) {
-            console.error('API error:', data);
-            resolve(new Response(JSON.stringify({ error: 'Failed to fetch data from the API' }), { status: res.statusCode }));
-          } else {
-            const videos = data?.videos || [];
-            if (videos.length === 0) {
-              resolve(new Response(JSON.stringify({ message: 'No videos found', videos: [] }), { status: 200 }));
-            } else {
-              resolve(new Response(JSON.stringify({ videos }), { status: 200 }));
-            }
-          }
-        });
-      });
-
-      req.on('error', (error) => {
-        console.error('Error in /api/search:', error);
-        reject(new Response(JSON.stringify({ error: 'An error occurred', details: error.message }), { status: 500 }));
-      });
-
-      req.end();
+      },
     });
+
+    const scraperResponse = await fetch(scraperRequest);
+
+    // Check for HTTP errors
+    if (!scraperResponse.ok) {
+      const errorText = await scraperResponse.text();
+      console.error('API error:', errorText);
+      return new Response(JSON.stringify({ error: 'Failed to fetch data from the API' }), { status: scraperResponse.status });
+    }
+
+    const { code, data } = await scraperResponse.json();
+
+    if (code !== 0) {
+      console.log('Error in scraper API:', data);
+      return new Response(JSON.stringify({ error: 'An error occurred in the scraper API' }), { status: 500 });
+    }
+
+    const videos = data?.videos || [];
+    if (videos.length === 0) {
+      return new Response(JSON.stringify({ message: 'No videos found', videos: [] }), { status: 200 });
+    }
+
+    return new Response(JSON.stringify({ videos }), { status: 200 });
   } catch (error) {
     console.error('Error in /api/search:', error);
     return new Response(JSON.stringify({ error: 'An error occurred', details: error.message }), { status: 500 });
