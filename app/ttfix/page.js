@@ -45,15 +45,15 @@ const TikTokSearch = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {results.map((result) => (
-          <Card key={result.id}>
-            <CardHeader>
+          <div key={result.id}>
+            <div>
               <h3 className="text-lg font-semibold">{result.author?.nickname || 'Unknown Author'}</h3>
-            </CardHeader>
-            <CardContent>
+            </div>
+            <div>
               <p>{result.desc}</p>
               <p className="mt-2">Views: {result.stats?.playCount || 'N/A'}</p>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         ))}
       </div>
     </div>
