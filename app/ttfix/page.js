@@ -8,23 +8,23 @@ const TikTokSearch = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const handleSearch = async () => {
-    if (!keywords.trim()) return;
+  // const handleSearch = async () => {
+  //   if (!keywords.trim()) return;
 
-    setLoading(true);
-    setError(null);
+  //   setLoading(true);
+  //   setError(null);
 
-    try {
-      const response = await fetch(`/api/ttsearch?keywords=${encodeURIComponent(keywords)}`);
-      if (!response.ok) throw new Error('Failed to fetch data');
-      const data = await response.json();
-      setResults(data.data || []);
-    } catch (err) {
-      setError('An error occurred while fetching results');
-    } finally {
-      setLoading(false);
-    }
-  };
+  //   try {
+  //     const response = await fetch(`/api/ttsearch?keywords=${encodeURIComponent(keywords)}`);
+  //     if (!response.ok) throw new Error('Failed to fetch data');
+  //     const data = await response.json();
+  //     setResults(data.data || []);
+  //   } catch (err) {
+  //     setError('An error occurred while fetching results');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
     <div className="p-4">
